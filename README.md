@@ -1,0 +1,1 @@
+# JS2-1-constructor-of-collection
