@@ -36,6 +36,6 @@ assert.equal(items.removeAt(0), false);
 assert.equal(items.removeAt(2), true);
 assert.equal(items.removeAt(5), true);
 
-assert.deepEqual(items.values(), [10, 'a', 'b', 'c']);
+assert.deepEqual(items.values(), [10, 'a', 'b', 'c'])
 
 console.info('OK!');
