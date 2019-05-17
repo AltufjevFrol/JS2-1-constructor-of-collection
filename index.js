@@ -60,7 +60,16 @@ else return false;
 
 //вспомогательная функия возвращает номер следуюещего свойства
 function getNumProp (collection){
-	return Object.keys(collection).length + 1;
+	/*
+	*Так как свойства могут удаляться то имена свойств могу идти не подряд,
+	*что бы не перезаписать какое то свойство следущее имя в коллекции
+	*должно быть на 1 больше чем самое большое имя(номер)
+	*/
+	var bigestNum = Object.keys(collection).sort(function compareNumbers(a, b) {return a - b;}).pop();
+	return ++bigestNum;
+	/*
+	*Предполагаеться что коллекции создаются и изменяются только методами
+	*/
 }
 
 
