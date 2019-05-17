@@ -15,4 +15,11 @@ Collection.prototype.values = function () {};
 /**
  * Создание коллекции из массива значений
  */
-Collection.from = function () {};
+Collection.from = function (arrItems) {
+var obj = new Collection();
+for (var i = 0, countProp = 1; i<arrItems.length; i++, countProp++){
+	obj[countProp] = arrItems[i];
+}
+
+return obj;
+}
