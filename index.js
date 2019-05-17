@@ -4,16 +4,26 @@ module.exports = Collection;
  * Конструктор коллекции
  * @constructor
  */
-function Collection() {}
+function Collection(x){
+this.length = 0;//добавляем псевдо length для работы метода values
+	return 
+}
 
 
-// Методы коллекции
 /*
 *Метод values возвращает массив элементов коллекци
 */
 Collection.prototype.values = function () {
+var arr =  Array.prototype.slice.call(this);
+/*
+*slice записывает в arr[0] undefined, а до последнего не доходит,
+*последним (в хроме покрайней мере) всегда будет length нам он не нужен.
+*Нет ни какой гарантии что всех реализациях JS будет так.
+*Этот надо переделать
+*/
+arr.shift();
+return arr;
 }
-
 /*
 *Метод at возвращает iтое свойство коллекции
 */
@@ -30,10 +40,10 @@ Collection.prototype.append = function(item) {
 */
 if (item instanceof Collection) {
 for (key in item){
-	if (!item.hasOwnProperty(key)) {continue}
-		else {
+	if ((item.hasOwnProperty(key)) && (key != 'length')) {
 			this[getNumProp(this)] = item[key];
-		}
+			} 
+		else {continue}
 	}
 }
 /*
@@ -43,6 +53,7 @@ for (key in item){
 else {
 	this[getNumProp(this)] = item;
 }
+	this.length = fakeLength(this);
 	return this;
 }
 
@@ -53,35 +64,46 @@ else {
 Collection.prototype.removeAt = function(i) {
 if (this.hasOwnProperty(i)){
 	delete this[i];
-	return true
+this.length = fakeLength(this);
+return true;
 }
 else return false;
 }
 
-//вспомогательная функия возвращает номер следуюещего свойства
+//Вспомогательная функии
+
+// возвращает номер следуюещего свойства
 function getNumProp (collection){
 	/*
 	*Так как свойства могут удаляться то имена свойств могу идти не подряд,
 	*что бы не перезаписать какое то свойство следущее имя в коллекции
 	*должно быть на 1 больше чем самое большое имя(номер)
 	*/
-	var bigestNum = Object.keys(collection).sort(function compareNumbers(a, b) {return a - b;}).pop();
-	return ++bigestNum;
+	var _keys = Object.keys(collection);
 	/*
-	*Предполагаеться что коллекции создаются и изменяются только методами
+	* в колекции только одно не номерное свойство 
 	*/
+	var _i = _keys.indexOf('length');
+	_keys.splice(_i,1);
+	var bigestNum =_keys.sort(function compareNumbers(a, b) {return a - b;}).pop();
+	return ++bigestNum;	
+}
+
+// определим псевдо length
+function fakeLength (collection) {
+	return Object.keys(collection).length;//свойство length то же считаем оно отвалится после slice в методе values
 }
 
 
 
-/**
- * Создание коллекции из массива значений
- */
+/*
+* Создание коллекции из массива значений
+*/
 Collection.from = function (arrItems) {
 var obj = new Collection();
-for (var i = 0, countProp = 1; i<arrItems.length; i++, countProp++){
+for (var i = 0, countProp = 1; i<arrItems.length; i++, countProp++) {
 	obj[countProp] = arrItems[i];
 }
-
+obj.length = fakeLength(obj);//обновляем псевдо length для работы метода values
 return obj;
 }
