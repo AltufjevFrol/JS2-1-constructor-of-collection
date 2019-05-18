@@ -56,8 +56,9 @@ else
 */
 Collection.prototype.removeAt = function(i) {
 if (i<=0 || !Math.floor(i)) return false;//целый, положительный, не ноль
-if (--i>=this.list.length) return false;// хотим отобрать больше чем есть
-this.list.splice(--i,1);
+var indexList = i-1;
+if (indexList>=this.list.length) return false;// хотим отобрать больше чем есть
+this.list.splice(indexList,1);
 return true;
 }
 
